@@ -1,26 +1,34 @@
-# How the agent should execute
+# Execute deploy with Bankr wallet
 
-Do not run the user's local liqpad-deploy.ts.
+const creator = bankrWallet;
+const liqpad  = "0xa0D2667DD863257B85D0593AED3ee791F48F1B10";
 
-Pseudo-flow:
+await liquid.deployToken({
+  name,
+  symbol,
+  image,
+  tokenAdmin: creator,
+  metadata,
+  context: JSON.stringify({ interface: "liqpad", source: "twitter" }),
+  hook: ADDRESSES.HOOK_DYNAMIC_FEE_V2,
+  pairedToken: EXTERNAL.DIEM,
+  poolData: encodeDynamicFeePoolData({
+    baseFeeBps: 100,
+    maxFeeBps: 500,
+    referenceTickFilterPeriod: 300,
+    resetPeriod: 3600,
+    resetTickFilter: 100,
+    feeControlNumerator: 500000000n,
+    decayFilterBps: 5000,
+  }),
+  ...positions,
+  rewardAdmins:     [liqpad, creator],
+  rewardRecipients: [liqpad, creator],
+  rewardBps:        [2000, 8000],
+});
 
-1. publicClient = viem on Base, transport = http(process.env.BASE_RPC || undefined)
-2. address = Bankr wallet address
-3. diemPrice = GeckoTerminal
-4. positions = createLiquidPositionsUSD(mcap || 20000, diemPrice)
-5. Build deployToken args from references/deploy-config.md
-6. If liquid-sdk can use a custom account:
-   signTransaction -> POST https://api.bankr.bot/wallet/sign
-     { signatureType: "eth_signTransaction", transaction: { to, data, value, chainId: 8453 } }
-   sendTransaction -> POST https://api.bankr.bot/wallet/submit
-     { transaction: { to, data, value, chainId: 8453 }, waitForConfirmation: true }
-7. Else encode factory.deployToken and submit that raw tx only.
-8. Parse TokenCreated / sdk result for tokenAddress, txHash, poolId.
+Sign via POST /wallet/sign (eth_signTransaction)
+Submit via POST /wallet/submit, chainId 8453
+RPC = BASE_RPC || default Base
 
-Env allowed
-- BANKR_API_KEY (already present in Bankr runtime)
-- BASE_RPC (optional)
-
-Env forbidden
-- DIEMPLOYER_TEST
-- any PRIVATE_KEY
+Never use DIEMPLOYER_TEST or privateKeyToAccount.
