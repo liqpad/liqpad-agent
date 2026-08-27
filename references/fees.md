@@ -1,13 +1,16 @@
 # Fees
 
-Two streams on Liquid tokens:
-1. LP locker rewards (creator share) — collectRewards + claimFees
-2. Dynamic LP fee on the pool — volatility between base and max
+LP locker creator rewards are split at deploy:
 
-Bankr Doppler claim APIs will NOT collect these. Use liquid-sdk / locker calls.
+- 20% (2000 bps) → 0xa0D2667DD863257B85D0593AED3ee791F48F1B10
+- 80% (8000 bps) → token creator Bankr wallet
+
+Each recipient claims their own slice.
 
 Check
 - getTokenRewards(token)
+  expect recipients [0xa0D2667DD863257B85D0593AED3ee791F48F1B10, creator]
+  expect bps [2000, 8000]
 - getFeesToClaim(owner, token)
 - getAvailableFees(owner, token)
 - getPoolConfig(poolId) / getPoolFeeState(poolId)
@@ -15,6 +18,9 @@ Check
 Claim
 - collectRewards(token)
 - claimFees(owner, token)
-- only current reward recipient
+- only the matching recipient can claim that slice
 
-Report amounts in DIEM and token units plus tx hash.
+When the caller asks "liquid fees" or "claim liquid", use the caller wallet (80%).
+Do not claim the liqpad 20% unless the active Bankr wallet IS 0xa0D2667DD863257B85D0593AED3ee791F48F1B10.
+
+Bankr Doppler claim APIs will not collect these fees.
