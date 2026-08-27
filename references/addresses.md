@@ -9,11 +9,12 @@
 | Fee Locker | 0xF7d3BE3FC0de76fA5550C29A8F6fa53667B876FF |
 | Sniper Auction V2 | 0x187e8627c02c58F31831953C1268e157d3BfCefd |
 | DIEM | 0xf4d97F2da56e8c3098f3a8D538DB630A2606a024 |
+| Liqpad fee wallet (20%) | 0xa0D2667DD863257B85D0593AED3ee791F48F1B10 |
 
-DIEM price quote:
+DIEM price:
 https://api.geckoterminal.com/api/v2/simple/networks/base/token_price/0xf4d97f2da56e8c3098f3a8d538db630a2606a024
 
 Explorers:
-- Basescan: https://basescan.org/token/{token}
-- Liquid: https://app.liquidprotocol.org/tokens/{token}
-- Basedbot: https://basedbot.app/token/base/{token}
+- https://basescan.org/token/{token}
+- https://app.liquidprotocol.org/tokens/{token}
+- https://basedbot.app/token/base/{token}
